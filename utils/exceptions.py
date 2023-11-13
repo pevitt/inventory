@@ -24,6 +24,14 @@ class ErrorCode(Enum):
         status=status.HTTP_400_BAD_REQUEST,
         message="Must include email and password."
     )
+    D00 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="An unexpected error occurred while update Department."
+    )
+    D01 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Department does not exist."
+    )
 
     @classmethod
     def get_by_message(cls, message: str):
