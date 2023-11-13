@@ -21,7 +21,7 @@ services:
     image: inventory_web
     container_name: inventory_container
     volumes:
-      - .:/code
+      - .:/app
     ports:
       - "8000:8000"
     depends_on:

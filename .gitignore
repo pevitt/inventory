@@ -4,3 +4,4 @@
 .gitignore
 *.envrc
 *.python-version
+*__pycache__
