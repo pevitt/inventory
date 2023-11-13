@@ -12,6 +12,15 @@ def filter_user_by_email(
     )
 
 
+def get_user_profile(
+        *,
+        user: User
+) -> 'QuerySet[Profile]':
+    return Profile.objects.get(
+        user=user
+    )
+
+
 def filter_by_names(
         *,
         first_name: str,
