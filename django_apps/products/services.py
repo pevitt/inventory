@@ -56,3 +56,48 @@ def update_department(
     )
 
     return department_data
+
+
+def create_product(
+        *,
+        department_id: int,
+        name: str,
+        description: str,
+        code: str,
+        cost: float,
+        price: float,
+        stock: int
+) -> 'Dict[str, Any]':
+    department_qry = product_selectors.get_department_by_id(
+        id=department_id
+    )
+    product_qry = product_selectors.get_product_by_code(
+        code=code
+    )
+
+    if product_qry.exists():
+        raise InventoryAPIException(ErrorCode.P02)
+
+    department = department_qry.first()
+    product = department.products.create(
+        department=department,
+        name=name,
+        description=description,
+        code=code,
+        cost=cost,
+        price=price,
+        stock=stock
+    )
+
+    product_data = dict(
+        id=product.id,
+        department=product.department.name,
+        name=product.name,
+        description=product.description,
+        code=product.code,
+        cost=product.cost,
+        price=product.price,
+        stock=product.stock
+    )
+
+    return product_data

@@ -32,6 +32,18 @@ class ErrorCode(Enum):
         status=status.HTTP_400_BAD_REQUEST,
         message="Department does not exist."
     )
+    P00 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="An unexpected error occurred while update Product."
+    )
+    P01 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Product does not exist."
+    )
+    P02 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Product already exist."
+    )
 
     @classmethod
     def get_by_message(cls, message: str):

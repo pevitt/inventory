@@ -15,3 +15,13 @@ def get_department_by_id(
         pk=id
     )
     return departments
+
+
+def get_product_by_code(
+        *,
+        code: str
+) -> 'QuerySet[Products]':
+    products = Products.objects.filter(
+        code=code
+    )
+    return products

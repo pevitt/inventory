@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import DepartmentView, DepartmentDetailView
+from .views import DepartmentView, DepartmentDetailView, ProductView
 
 urlpatterns = [
     path(
@@ -11,5 +11,10 @@ urlpatterns = [
         'departments/<int:department_id>',
         DepartmentDetailView.as_view(),
         name='department_detail'
+    ),
+    path(
+        '',
+        ProductView.as_view(),
+        name='products'
     )
 ]

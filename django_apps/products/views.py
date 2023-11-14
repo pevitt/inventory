@@ -83,3 +83,72 @@ class DepartmentDetailView(APIView):
             out_serializer.data,
             status=status.HTTP_202_ACCEPTED
         )
+
+
+class ProductView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdminUser | IsPurchaseUser]
+
+    class InputProductSerializer(serializers.Serializer):
+        department_id = serializers.IntegerField(
+            required=True
+        )
+        name = serializers.CharField(
+            required=True
+        )
+        description = serializers.CharField(
+            required=False
+        )
+        code = serializers.CharField(
+            required=True
+        )
+        cost = serializers.FloatField(
+            required=True
+        )
+        price = serializers.FloatField(
+            required=False,
+            default=0
+        )
+        stock = serializers.IntegerField(
+            required=False,
+            default=0
+        )
+
+        def validate(self, attrs):
+            department_id = attrs.get('department_id')
+            department_qry = products_selectors.get_department_by_id(id=department_id)
+            if not department_qry.exists():
+                raise InventoryAPIException(ErrorCode.D01)
+            deparment = department_qry.first()
+
+            # Create Code
+            code_product = f"{deparment.code}-{attrs.get('code')}"
+            attrs['code'] = code_product
+
+            return attrs
+
+    class OutputProductSerializer(serializers.Serializer):
+        department = serializers.CharField()
+        name = serializers.CharField()
+        description = serializers.CharField()
+        code = serializers.CharField()
+        cost = serializers.FloatField()
+        price = serializers.FloatField()
+        stock = serializers.IntegerField()
+
+    def post(self, request):
+        in_serializer = self.InputProductSerializer(data=request.data)
+        in_serializer.is_valid(raise_exception=True)
+        data = products_services.create_product(
+            **in_serializer.validated_data
+        )
+        out_serializer = self.OutputProductSerializer(data=data)
+
+        try:
+            out_serializer.is_valid(raise_exception=True)
+        except:
+            raise InventoryAPIException(ErrorCode.P00)
+
+        return Response(
+            out_serializer.data,
+            status=status.HTTP_201_CREATED
+        )

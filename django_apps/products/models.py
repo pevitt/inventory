@@ -1,5 +1,6 @@
 from django.db import models
 from utils.models import BaseModelUUID, BaseModel
+from decimal import Decimal
 
 
 # Create your models here.
@@ -74,3 +75,19 @@ class Products(BaseModelUUID):
 
     def __str__(self):
         return f'{self.name}'
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            # Its no necessary to use de if else, because pk always exists in the object when is created
+            # only created_at came empty, but a let it for the example
+            try:
+                product = Products.objects.get(id=self.pk)
+                if product.cost != self.cost:
+                    self.price = Decimal(self.cost) * Decimal(1 + (self.department.margin_percentage/100))
+            except Products.DoesNotExist:
+                self.price = Decimal(self.cost) * Decimal(1 + (self.department.margin_percentage/100))
+                pass
+        else:
+            self.price = Decimal(self.cost) * Decimal(1 + (self.department.margin_percentage/100))
+
+        super().save(*args, **kwargs)
