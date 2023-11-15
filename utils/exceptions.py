@@ -29,7 +29,7 @@ class ErrorCode(Enum):
         message="An unexpected error occurred while update Department."
     )
     D01 = dict(
-        status=status.HTTP_400_BAD_REQUEST,
+        status=status.HTTP_404_NOT_FOUND,
         message="Department does not exist."
     )
     P00 = dict(
@@ -37,7 +37,7 @@ class ErrorCode(Enum):
         message="An unexpected error occurred while update Product."
     )
     P01 = dict(
-        status=status.HTTP_400_BAD_REQUEST,
+        status=status.HTTP_404_NOT_FOUND,
         message="Product does not exist."
     )
     P02 = dict(

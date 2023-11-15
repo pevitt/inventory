@@ -152,3 +152,119 @@ class ProductView(APIView):
             out_serializer.data,
             status=status.HTTP_201_CREATED
         )
+
+    class InputGetSerializer(serializers.Serializer):
+        department_id = serializers.IntegerField(
+            required=True
+        )
+
+        def validate(self, attrs):
+            department_id = attrs.get('department_id')
+            department_qry = products_selectors.get_department_by_id(id=department_id)
+            if not department_qry.exists():
+                raise InventoryAPIException(ErrorCode.D01)
+            return attrs
+
+    class OutputGetProductSerializer(serializers.Serializer):
+        id = serializers.UUIDField()
+        department_name = serializers.CharField()
+        name = serializers.CharField()
+        description = serializers.CharField()
+        code = serializers.CharField()
+        cost = serializers.FloatField()
+        price = serializers.FloatField()
+        stock = serializers.IntegerField()
+
+    def get(self, request):
+        in_serializer = self.InputGetSerializer(data=request.query_params)
+        in_serializer.is_valid(raise_exception=True)
+        data = products_services.get_products_by_department_id(
+            **in_serializer.validated_data
+        )
+        out_serializer = self.OutputGetProductSerializer(data=data, many=True)
+
+        try:
+            out_serializer.is_valid(raise_exception=True)
+        except:
+            raise InventoryAPIException(ErrorCode.P00)
+
+        return Response(
+            out_serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+
+class ProductViewDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdminUser | IsPurchaseUser]
+
+    class OutputGetProductSerializer(serializers.Serializer):
+        id = serializers.UUIDField()
+        department_name = serializers.CharField()
+        name = serializers.CharField()
+        description = serializers.CharField()
+        code = serializers.CharField()
+        cost = serializers.FloatField()
+        price = serializers.FloatField()
+        stock = serializers.IntegerField()
+
+    def get(self, request, product_id):
+        data = products_services.get_product_by_id(
+            product_id=product_id
+        )
+        out_serializer = self.OutputGetProductSerializer(data=data)
+
+        try:
+            out_serializer.is_valid(raise_exception=True)
+        except:
+            raise InventoryAPIException(ErrorCode.P00)
+
+        return Response(
+            out_serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    class InputPutProductSerializer(serializers.Serializer):
+        id = serializers.UUIDField(
+            required=True
+        )
+        name = serializers.CharField(
+            required=True
+        )
+        description = serializers.CharField(
+            required=True
+        )
+        cost = serializers.FloatField(
+            required=True
+        )
+        price = serializers.FloatField(
+            required=False
+        )
+        stock = serializers.IntegerField(
+            required=True
+        )
+
+        def validate(self, attrs):
+            product_id = attrs.get('id')
+            product_qry = products_selectors.get_product_by_id(id=product_id)
+            if not product_qry.exists():
+                raise InventoryAPIException(ErrorCode.P01)
+            return attrs
+
+    def put(self, request, product_id):
+        in_serializer = self.InputPutProductSerializer(data=request.data)
+        in_serializer.is_valid(raise_exception=True)
+        data = products_services.update_product(
+            product_id=product_id,
+            **in_serializer.validated_data
+        )
+        out_serializer = self.OutputGetProductSerializer(data=data)
+
+        try:
+            out_serializer.is_valid(raise_exception=True)
+        except:
+            raise InventoryAPIException(ErrorCode.P00)
+
+        return Response(
+            out_serializer.data,
+            status=status.HTTP_202_ACCEPTED
+        )

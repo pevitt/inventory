@@ -1,6 +1,6 @@
 from .models import Departments, Products
 from django.db.models import QuerySet
-
+from uuid import UUID
 
 def get_departments_list() -> 'QuerySet[Departments]':
     departments = Departments.objects.all()
@@ -23,5 +23,15 @@ def get_product_by_code(
 ) -> 'QuerySet[Products]':
     products = Products.objects.filter(
         code=code
+    )
+    return products
+
+
+def get_product_by_id(
+        *,
+        id: UUID
+) -> 'QuerySet[Products]':
+    products = Products.objects.filter(
+        pk=id
     )
     return products
