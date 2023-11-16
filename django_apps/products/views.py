@@ -7,7 +7,7 @@ from utils.exceptions import InventoryAPIException, ErrorCode
 from django_apps.products import selectors as products_selectors
 from django_apps.products import services as products_services
 from django_apps.authentication.permissions import IsAdminUser, IsPurchaseUser
-
+from .tasks import prueba_task
 
 # Create your views here.
 class DepartmentView(APIView):
@@ -23,7 +23,7 @@ class DepartmentView(APIView):
     def get(self, request):
         data = products_services.get_all_departments()
         out_serializer = self.OutPutDeparmentSerializer(data=data, many=True)
-
+        # prueba_task.delay()
         try:
             out_serializer.is_valid(raise_exception=True)
         except:
