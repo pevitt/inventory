@@ -9,6 +9,7 @@ from django_apps.products import services as products_services
 from django_apps.authentication.permissions import IsAdminUser, IsPurchaseUser
 from .tasks import prueba_task
 
+
 # Create your views here.
 class DepartmentView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsAdminUser | IsPurchaseUser]

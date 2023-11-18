@@ -1,9 +1,12 @@
+import uuid
+
 from django_apps.products import selectors as product_selectors
 from typing import Any, Dict
 from utils.exceptions import InventoryAPIException, ErrorCode
 from django.db.models import F
 from decimal import Decimal
 from uuid import UUID
+from django.db import transaction
 
 
 def get_all_departments() -> 'Dict[str, Any]':
@@ -277,3 +280,104 @@ def update_product(
     )
 
     return product_data
+
+
+def create_purchase_order(
+        *,
+        product_id: uuid,
+        quantity: int,
+        unit_cost: float,
+        total_cost: float
+) -> 'Dict[str, Any]':
+    """
+    Create purchase order
+    :param product_id:
+    :param quantity:
+    :param unit_cost:
+    :param total_cost:
+    :return:
+    """
+    product_qry = product_selectors.get_product_by_id(
+        id=product_id
+    )
+
+    if not product_qry.exists():
+        raise InventoryAPIException(ErrorCode.P01)
+
+    product = product_qry.first()
+
+    purchase_order_data = dict()
+
+    with transaction.atomic():
+        product.stock = product.stock + quantity
+        product.cost = unit_cost
+        product.save()
+
+        purchase_order = product.purchase_order_product.create(
+            product=product,
+            quantity=quantity,
+            unit_cost=unit_cost,
+            total_cost=total_cost
+        )
+
+        purchase_order_data = dict(
+            id=purchase_order.id,
+            product_name=purchase_order.product.name,
+            quantity=purchase_order.quantity,
+            unit_cost=purchase_order.unit_cost,
+            total_cost=purchase_order.total_cost,
+            purchase_date=purchase_order.purchase_date,
+            status=purchase_order.status
+        )
+
+        return purchase_order_data
+
+
+def create_sale_order(
+        *,
+        product_id: uuid,
+        quantity: int,
+        unit_price: float,
+        total_price: float
+) -> 'Dict[str, Any]':
+    """
+    Create sale order
+    :param product_id:
+    :param quantity:
+    :param unit_price:
+    :param total_price:
+    :return:
+    """
+    product_qry = product_selectors.get_product_by_id(
+        id=product_id
+    )
+
+    if not product_qry.exists():
+        raise InventoryAPIException(ErrorCode.P01)
+
+    product = product_qry.first()
+
+    sale_order_data = dict()
+
+    with transaction.atomic():
+        product.stock = product.stock - quantity
+        product.save()
+
+        sale_order = product.sale_order_product.create(
+            product=product,
+            quantity=quantity,
+            unit_price=unit_price,
+            total_price=total_price
+        )
+
+        sale_order_data = dict(
+            id=sale_order.id,
+            product_name=sale_order.product.name,
+            quantity=sale_order.quantity,
+            unit_price=sale_order.unit_price,
+            total_price=sale_order.total_price,
+            sale_date=sale_order.sale_date,
+            status=sale_order.status
+        )
+
+    return sale_order_data

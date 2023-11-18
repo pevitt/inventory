@@ -44,6 +44,38 @@ class ErrorCode(Enum):
         status=status.HTTP_400_BAD_REQUEST,
         message="Product already exist."
     )
+    O00 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="An unexpected error occurred while create Order."
+    )
+    OP0 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="An unexpected error occurred while create Order."
+    )
+    OP1 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Quantity must be greater then 0."
+    )
+    OP3 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Cost must be greater then 0."
+    )
+    OP2 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Quantity for product is not available."
+    )
+    S00 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="An unexpected error occurred while create Sale Order."
+    )
+    S01 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Quantity must be greater then 0."
+    )
+    S02 = dict(
+        status=status.HTTP_400_BAD_REQUEST,
+        message="Quantity for product is not available."
+    )
 
     @classmethod
     def get_by_message(cls, message: str):
