@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 
+
 class EmailPasswordAuthBackend():
     """
     Authentication using auth user model by email
     """
+
     def authenticate(
             self,
             email=None,

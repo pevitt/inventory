@@ -10,6 +10,9 @@ up-d: ## Up container
 up-build: ## Build the base image
 	docker compose up --build
 
+stop: ## Stop container
+    docker compose stop
+
 makemigrations: ## Run django makemigrations command
 	docker compose run web python manage.py makemigrations
 
