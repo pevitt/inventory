@@ -11,7 +11,8 @@ ENDPOINT = '/api/products/departments'
 )
 def invoke_get_departments(
         db,
-        api_client_user_authenticated
+        api_client_user_authenticated,
+        load_departments
 ):
     """
     Invoke get departments service
@@ -34,3 +35,17 @@ def validate_get_departments_response(
     Validate get departments response
     """
     assert api_request.status_code == status_code
+
+@then(
+    parsers.parse(
+        'I recieve a response with {count:d} departments'
+    )
+)
+def validate_count_departments(
+        api_request,
+        count: int
+):
+    """
+    Validate count departments
+    """
+    assert len(api_request.data) == count

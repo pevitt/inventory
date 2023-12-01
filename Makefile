@@ -4,14 +4,17 @@ build: ## Build the base image
 up: ## Up container
 	docker compose up
 
+stop: ## Stop container
+	docker compose stop
+
+down: ## Down container
+	docker compose down
+
 up-d: ## Up container
 	docker compose up -d
 
 up-build: ## Build the base image
 	docker compose up --build
-
-stop: ## Stop container
-    docker compose stop
 
 makemigrations: ## Run django makemigrations command
 	docker compose run web python manage.py makemigrations
