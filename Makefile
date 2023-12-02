@@ -25,8 +25,9 @@ migrate: ## Run django migrate command
 shell: ## Run django shell_plus command
 	docker compose run web python manage.py shell
 
+# ARGS=/app/fixtures/departments.json or /app/fixtures/products.json
 load-fixtures:
-	docker compose run web python manage.py loaddata /app/fixtures/departments.json
+	docker compose run web python manage.py loaddata $(ARGS)
 
 test: ## Run django shell_plus command ARGS=--fixtres -v for scenary details
 	docker compose run web pytest $(ARGS)
