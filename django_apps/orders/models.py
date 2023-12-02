@@ -19,7 +19,7 @@ class PurchaseOrder(BaseModel):
     quantity = models.IntegerField()
     unit_cost = models.FloatField()
     total_cost = models.FloatField()
-    purchase_date = models.DateTimeField(default=datetime.now())
+    purchase_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=50,
         choices=PURCHARSE_ORDER_STATUS,
@@ -49,7 +49,7 @@ class SaleOrder(BaseModel):
     quantity = models.IntegerField()
     unit_price = models.FloatField()
     total_price = models.FloatField()
-    sale_date = models.DateTimeField(default=datetime.now())
+    sale_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=50,
         choices=SALE_ORDER_STATUS,

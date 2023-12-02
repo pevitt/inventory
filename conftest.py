@@ -61,3 +61,10 @@ def load_departments(db):
     Load departments from fixtures to departments table
     """
     call_command('loaddata', 'fixtures/departments.json')
+
+@pytest.fixture
+def load_products(db):
+    """
+    Load products from fixtures to products table
+    """
+    call_command('loaddata', 'fixtures/products.json')
