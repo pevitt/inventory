@@ -1,17 +1,14 @@
 asgiref==3.7.2
-backports.zoneinfo==0.2.1
 Django==4.2.3
 djangorestframework==3.14.0
 pytz==2023.3
 sqlparse==0.4.4
 typing-extensions==4.7.1
 asgiref==3.7.2
-backports.zoneinfo==0.2.1
 Django==4.2.3
 djangorestframework==3.14.0
 psycopg==3.1.9
 psycopg2==2.9.6
-pytz==2023.3
 sqlparse==0.4.4
 typing-extensions==4.7.1
 exceptiongroup==1.1.2
@@ -32,6 +29,7 @@ six==1.16.0
 tomli==2.0.1
 typing-extensions==4.7.1
 asgiref==3.7.2
-backports.zoneinfo==0.2.1
-celery==5.1.2
+celery==5.2.7
 redis==3.5.3
+ipdb==0.13.13
+pdbpp==0.10.3

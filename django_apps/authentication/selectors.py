@@ -1,5 +1,6 @@
 from django.db.models import QuerySet
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 from .models import Profile
 
 
@@ -29,4 +30,12 @@ def filter_by_names(
     return User.objects.filter(
         first_name=first_name,
         last_name=last_name
+    )
+
+def get_user_token(
+        *,
+        user: User
+) -> 'QuerySet[Token]':
+    return Token.objects.get_or_create(
+        user=user
     )
