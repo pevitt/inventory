@@ -55,6 +55,7 @@ def validate_get_department_by_id_response(
     """
     Validate get department by id response
     """
+    breakpoint()  # Esto usará pdb++ automáticamente
     assert api_request.status_code == status_code
 
 @then(

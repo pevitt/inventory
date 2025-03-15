@@ -40,3 +40,12 @@ docker-exec: ## Run django shell_plus command make docker-exec CONTAINER_ID=244f
 #make docker-attach CONTAINER_ID=8be173a0b68a
 docker-attach: ## docker attach
 	docker attach --detach-keys ctrl-d $(CONTAINER_ID)
+
+create-superuser:
+	docker compose run web python manage.py createsuperuser
+
+reset-db:
+	docker compose run web python manage.py reset_db -c
+
+dump-data:
+	docker compose run web python manage.py dumpdata --indent 4 -o ${output} ${model}

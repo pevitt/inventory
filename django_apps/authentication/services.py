@@ -1,8 +1,9 @@
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from typing import Any, Dict
 
+from typing import Any, Dict
+from utils.exceptions import InventoryAPIException, ErrorCode
 from .models import Profile
+from django_apps.authentication import selectors as auth_selectors
+from django.contrib.auth.models import User
 
 
 def create_user(
@@ -29,8 +30,10 @@ def create_user(
 
 
 def get_token(user) -> Dict[str, Any]:
-    Token.objects.get_or_create(user=user)
+    token = auth_selectors.get_user_token(user=user)
 
+    if token is None:
+        raise InventoryAPIException(ErrorCode.E00)
     data = {
         'token': user.auth_token.key,
     }
